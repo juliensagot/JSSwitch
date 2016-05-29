@@ -20,7 +20,9 @@ public class JSSwitch: NSControl {
 	private let knobLayer = CALayer()
 	private let knobShadows = (smallStroke: CALayer(), smallShadow: CALayer(), mediumShadow: CALayer(), bigShadow: CALayer())
 
-	public var tintColor = NSColor(deviceRed: 104/255, green: 218/255, blue: 113/255, alpha: 1.0)
+	public var tintColor = NSColor(deviceRed: 104/255, green: 218/255, blue: 113/255, alpha: 1.0) {
+		didSet { needsDisplay = true }
+	}
 	public var on = false {
 		didSet { needsDisplay = true }
 	}
