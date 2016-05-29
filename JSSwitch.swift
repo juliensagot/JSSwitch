@@ -143,7 +143,7 @@ public class JSSwitch: NSControl {
 		var size: CGSize {
 			if pressed {
 				return CGSize(
-					width: ceil(backgroundLayer.bounds.height * 1.31) - (2 * borderWidth),
+					width: ceil(backgroundLayer.bounds.width * 0.69) - (2 * borderWidth),
 					height: backgroundLayer.bounds.height - (2 * borderWidth)
 				)
 			}
