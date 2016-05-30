@@ -12,6 +12,9 @@ public class JSSwitch: NSControl {
 	public override var wantsUpdateLayer: Bool {
 		return true
 	}
+	public override var intrinsicContentSize: NSSize {
+		return CGSize(width: 52, height: 32)
+	}
 
 	private var pressed = false
 	private let baseHeight: CGFloat = 62
@@ -95,12 +98,12 @@ public class JSSwitch: NSControl {
 		smallStroke.cornerRadius = ceil(smallStroke.bounds.height / 2)
 
 		let smallShadow = knobShadows.smallShadow
-		smallShadow.frame = knobLayer.frame.insetBy(dx: 1.5, dy: 1.5)
+		smallShadow.frame = knobLayer.frame.insetBy(dx: 2, dy: 2)
 		smallShadow.autoresizingMask = [.LayerWidthSizable]
 		smallShadow.cornerRadius = ceil(smallShadow.bounds.height / 2)
 		smallShadow.backgroundColor = NSColor.redColor().CGColor
 		smallShadow.shadowColor = NSColor.blackColor().CGColor
-		smallShadow.shadowOffset = CGSize(width: 0, height: -2 * effectScale)
+		smallShadow.shadowOffset = CGSize(width: 0, height: -3 * effectScale)
 		smallShadow.shadowOpacity = 0.12
 		smallShadow.shadowRadius = 2.0 * effectScale
 
@@ -110,7 +113,7 @@ public class JSSwitch: NSControl {
 		mediumShadow.cornerRadius = smallShadow.cornerRadius
 		mediumShadow.backgroundColor = NSColor.redColor().CGColor
 		mediumShadow.shadowColor = NSColor.blackColor().CGColor
-		mediumShadow.shadowOffset = CGSize(width: 0, height: -8 * effectScale)
+		mediumShadow.shadowOffset = CGSize(width: 0, height: -9 * effectScale)
 		mediumShadow.shadowOpacity = 0.16
 		mediumShadow.shadowRadius = 6.0 * effectScale
 
@@ -120,7 +123,7 @@ public class JSSwitch: NSControl {
 		bigShadow.cornerRadius = smallShadow.cornerRadius
 		bigShadow.backgroundColor = NSColor.redColor().CGColor
 		bigShadow.shadowColor = NSColor.blackColor().CGColor
-		bigShadow.shadowOffset = CGSize(width: 0, height: -8 * effectScale)
+		bigShadow.shadowOffset = CGSize(width: 0, height: -9 * effectScale)
 		bigShadow.shadowOpacity = 0.06
 		bigShadow.shadowRadius = 0.5 * effectScale
 	}
