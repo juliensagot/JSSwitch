@@ -1,8 +1,8 @@
 # JSSwitch
->UISwitch lookalike, for OS X.
+>UISwitch lookalike, for macOS.
 
 [![MIT License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](LICENSE.md)
-![Platform OSX](https://img.shields.io/badge/platform-osx-lightgrey.svg)
+![Platform macOS](https://img.shields.io/badge/platform-macOS-lightgrey.svg)
 
 
 ![](Preview.gif)
@@ -26,11 +26,11 @@ print(mySwitch.on) // false
 You can customize the color by setting the `tintColor` property:
 
 ```swift
-mySwitch.tintColor = NSColor.redColor()
+mySwitch.tintColor = NSColor.red
 ```
 
 ## Requirements
-* Xcode 7
+* Xcode 8
 * OS X 10.11
 
 ## Integration
