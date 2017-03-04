@@ -9,21 +9,24 @@
 import AppKit
 
 public class JSSwitch: NSControl {
-	public override var wantsUpdateLayer: Bool {
-		return true
-	}
-	public override var intrinsicContentSize: NSSize {
-		return CGSize(width: 52, height: 32)
-	}
-
+	// MARK: - Properties
 	private var pressed = false
-	private let baseHeight: CGFloat = 62
 	private let backgroundLayer = CALayer()
 	private let knobContainer = CALayer()
 	private let knobLayer = CALayer()
 	private let knobShadows = (smallStroke: CALayer(), smallShadow: CALayer(), mediumShadow: CALayer(), bigShadow: CALayer())
 
-	public var tintColor = NSColor(deviceRed: 104/255, green: 218/255, blue: 113/255, alpha: 1.0) {
+	// MARK: Computed
+	public override var wantsUpdateLayer: Bool { return true }
+	public override var intrinsicContentSize: NSSize {
+		return CGSize(width: 52, height: 32)
+	}
+
+	private var scaleFactor: CGFloat {
+		return ceil(frame.size.height / 62) // Hardcoded base height
+	}
+
+	public var tintColor = NSColor(deviceRed: 76/255, green: 217/255, blue: 100/255, alpha: 1.0) {
 		didSet { needsDisplay = true }
 	}
 	public var on = false {
@@ -45,7 +48,7 @@ public class JSSwitch: NSControl {
 	private func setupLayers() {
 		wantsLayer = true
 		layer?.masksToBounds = false
-		layerContentsRedrawPolicy = .OnSetNeedsDisplay
+		layerContentsRedrawPolicy = .onSetNeedsDisplay
 
 		// Background
 		setupBackgroundLayer()
@@ -59,10 +62,7 @@ public class JSSwitch: NSControl {
 	// MARK: Background Layer
 	private func setupBackgroundLayer() {
 		backgroundLayer.frame = bounds
-		backgroundLayer.cornerRadius = ceil(bounds.height / 2)
-		backgroundLayer.borderWidth = on ? ceil(backgroundLayer.bounds.height) : 3.0 * ceil(backgroundLayer.bounds.height / baseHeight)
-		backgroundLayer.borderColor = on ? tintColor.CGColor : NSColor.blackColor().colorWithAlphaComponent(0.09).CGColor
-		backgroundLayer.autoresizingMask = [.LayerWidthSizable, .LayerHeightSizable]
+		backgroundLayer.autoresizingMask = [.layerWidthSizable, .layerHeightSizable]
 	}
 
 	// MARK: Knob
@@ -82,47 +82,47 @@ public class JSSwitch: NSControl {
 	}
 
 	private func setupKnobLayer() {
-		knobLayer.autoresizingMask = [.LayerWidthSizable]
-		knobLayer.backgroundColor = NSColor.whiteColor().CGColor
+		knobLayer.autoresizingMask = [.layerWidthSizable]
+		knobLayer.backgroundColor = NSColor.white.cgColor
 		knobLayer.frame = knobContainer.bounds
 		knobLayer.cornerRadius = ceil(knobContainer.bounds.height / 2)
 	}
 
 	private func setupKnobLayerShadows() {
-		let effectScale = backgroundLayer.bounds.height / baseHeight
+		let effectScale = scaleFactor
 		// Small Stroke
 		let smallStroke = knobShadows.smallStroke
 		smallStroke.frame = knobLayer.frame.insetBy(dx: -1, dy: -1)
-		smallStroke.autoresizingMask = [.LayerWidthSizable]
-		smallStroke.backgroundColor = NSColor.blackColor().colorWithAlphaComponent(0.06).CGColor
+		smallStroke.autoresizingMask = [.layerWidthSizable]
+		smallStroke.backgroundColor = NSColor.black.withAlphaComponent(0.06).cgColor
 		smallStroke.cornerRadius = ceil(smallStroke.bounds.height / 2)
 
 		let smallShadow = knobShadows.smallShadow
 		smallShadow.frame = knobLayer.frame.insetBy(dx: 2, dy: 2)
-		smallShadow.autoresizingMask = [.LayerWidthSizable]
+		smallShadow.autoresizingMask = [.layerWidthSizable]
 		smallShadow.cornerRadius = ceil(smallShadow.bounds.height / 2)
-		smallShadow.backgroundColor = NSColor.redColor().CGColor
-		smallShadow.shadowColor = NSColor.blackColor().CGColor
+		smallShadow.backgroundColor = NSColor.red.cgColor
+		smallShadow.shadowColor = NSColor.black.cgColor
 		smallShadow.shadowOffset = CGSize(width: 0, height: -3 * effectScale)
 		smallShadow.shadowOpacity = 0.12
 		smallShadow.shadowRadius = 2.0 * effectScale
 
 		let mediumShadow = knobShadows.mediumShadow
 		mediumShadow.frame = smallShadow.frame
-		mediumShadow.autoresizingMask = [.LayerWidthSizable]
+		mediumShadow.autoresizingMask = [.layerWidthSizable]
 		mediumShadow.cornerRadius = smallShadow.cornerRadius
-		mediumShadow.backgroundColor = NSColor.redColor().CGColor
-		mediumShadow.shadowColor = NSColor.blackColor().CGColor
+		mediumShadow.backgroundColor = NSColor.red.cgColor
+		mediumShadow.shadowColor = NSColor.black.cgColor
 		mediumShadow.shadowOffset = CGSize(width: 0, height: -9 * effectScale)
 		mediumShadow.shadowOpacity = 0.16
 		mediumShadow.shadowRadius = 6.0 * effectScale
 
 		let bigShadow = knobShadows.bigShadow
 		bigShadow.frame = smallShadow.frame
-		bigShadow.autoresizingMask = [.LayerWidthSizable]
+		bigShadow.autoresizingMask = [.layerWidthSizable]
 		bigShadow.cornerRadius = smallShadow.cornerRadius
-		bigShadow.backgroundColor = NSColor.redColor().CGColor
-		bigShadow.shadowColor = NSColor.blackColor().CGColor
+		bigShadow.backgroundColor = NSColor.red.cgColor
+		bigShadow.shadowColor = NSColor.black.cgColor
 		bigShadow.shadowOffset = CGSize(width: 0, height: -9 * effectScale)
 		bigShadow.shadowOpacity = 0.06
 		bigShadow.shadowRadius = 0.5 * effectScale
@@ -131,10 +131,9 @@ public class JSSwitch: NSControl {
 	// MARK: - Drawing
 	public override func updateLayer() {
 		// Background
-		backgroundLayer.frame = bounds
 		backgroundLayer.cornerRadius = ceil(bounds.height / 2)
-		backgroundLayer.borderWidth = on ? ceil(backgroundLayer.bounds.height) : 3.0 * ceil(backgroundLayer.bounds.height / baseHeight)
-		backgroundLayer.borderColor = on ? tintColor.CGColor : NSColor.blackColor().colorWithAlphaComponent(0.09).CGColor
+		backgroundLayer.borderWidth = on ? ceil(bounds.height) : 3.0 * scaleFactor
+		backgroundLayer.borderColor = on ? tintColor.cgColor : NSColor.black.withAlphaComponent(0.09).cgColor
 
 		// Knob
 		knobContainer.frame = knobFrameForState(on: on, pressed: pressed)
@@ -142,21 +141,21 @@ public class JSSwitch: NSControl {
 	}
 
 	// MARK: - Helpers
-	private func knobFrameForState(on on: Bool, pressed: Bool) -> CGRect {
-		let borderWidth = 3.0 * ceil(backgroundLayer.bounds.height / baseHeight)
+	private func knobFrameForState(on: Bool, pressed: Bool) -> CGRect {
+		let borderWidth = 3.0 * scaleFactor
 		var origin: CGPoint
 		var size: CGSize {
 			if pressed {
 				return CGSize(
-					width: ceil(backgroundLayer.bounds.width * 0.69) - (2 * borderWidth),
-					height: backgroundLayer.bounds.height - (2 * borderWidth)
+					width: ceil(bounds.width * 0.69) - (2 * borderWidth),
+					height: bounds.height - (2 * borderWidth)
 				)
 			}
-			return CGSize(width: backgroundLayer.bounds.height - (2 * borderWidth), height: backgroundLayer.bounds.height - (2 * borderWidth))
+			return CGSize(width: bounds.height - (2 * borderWidth), height: bounds.height - (2 * borderWidth))
 		}
-
+		
 		if on {
-			origin = CGPoint(x: backgroundLayer.bounds.width - size.width - borderWidth, y: borderWidth)
+			origin = CGPoint(x: bounds.width - size.width - borderWidth, y: borderWidth)
 		} else {
 			origin = CGPoint(x: borderWidth, y: borderWidth)
 		}
@@ -164,12 +163,12 @@ public class JSSwitch: NSControl {
 	}
 
 	// MARK: - Events
-	public override func mouseDown(theEvent: NSEvent) {
+	public override func mouseDown(with theEvent: NSEvent) {
 		pressed = true
 		needsDisplay = true
 	}
 
-	public override func mouseUp(theEvent: NSEvent) {
+	public override func mouseUp(with theEvent: NSEvent) {
 		pressed = false
 		on = !on
 	}
